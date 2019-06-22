@@ -31,3 +31,37 @@
     transform: rotate(360deg);
   }
 }
+
+.select-position-form{
+  width: 500px;
+  margin: 0 auto;
+  margin-top: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Audiorecord */
+.question{
+  width: 75%;
+  margin: 0 auto;
+  margin-top: 50px;
+  font-size: 20px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.timer{
+  font-family: monospace;
+  font-size: 40px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.btn{
+  margin: 5px;
+}
+
+
+/* END */
