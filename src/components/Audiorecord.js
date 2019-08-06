@@ -1,18 +1,19 @@
 import React, { Component } from 'react'
 import { ReactMic } from 'react-mic';
 import axios from 'axios';
-import Countdown from 'react-countdown-now';
+import './Audio.css'
+import { Link } from 'react-router-dom'
 
 export const register = newUser => {
   return
 }
-
 export default class Audiorecord extends Component {
 
   constructor() {
     super();
-    this.state = {record: false, pause: false, questions: [], activeQuestion: 0, timer: 0};
+    this.state = {blobObject: null, record: false, pause: false, questions: [], activeQuestion: 0, timer: 0};
     this.getQuestions();
+    this.totalquestions=10;
   }
 
   timerRef;
@@ -40,7 +41,7 @@ export default class Audiorecord extends Component {
   }
 
   startTimer(){
-    this.state.timer = 3 * 60;
+    this.state.timer = 2 * 60;
     this.timerRef = setInterval(() => {
       this.setState({timer: this.state.timer - 1});
       if(this.state.timer === 0) this.nextQuestion();
@@ -72,11 +73,25 @@ export default class Audiorecord extends Component {
   btnSubmitClick(event) {
     // send data to server
     this.nextQuestion();
+    this.totalquestions--;
+    console.log("Remaining questions:"+this.totalquestions);
   }
+
+  onData(recordedBlob) {
+    console.log('chunk of real-time data is: ', recordedBlob);
+  }
+
+  //   onStopCallback(recordedBlob) {
+  //    console.log('recordedBlob is: ', recordedBlob);
+  //  }
+
+    onStopCallback= (blobObject) => {
+      this.setState({ blobURL : blobObject.blobURL})
+    }
 
   formatTimer(seconds){
     if(seconds === 0){
-      return "03 : 00";
+      return "02 : 00";
     }else{
       let minutes = parseInt(seconds/60);
       if((minutes + "").length === 1) minutes = "0" + minutes;
@@ -91,20 +106,23 @@ export default class Audiorecord extends Component {
 
     let buttons;
     if(this.state.record){
-      buttons = <div>
-        <button type="button" className="btn btn-danger" onClick={() => this.btnSkipClick()}> Skip</button>
-        <button type="button" className="btn btn-success" onClick={() => this.btnSubmitClick()}> Submit</button>
-      </div>
+      buttons = <button type="button" className="btn btn-info btn-lg" onClick={() => this.btnSubmitClick()}> Submit</button>
     }
     else{
-      buttons = <button type="button" className="btn btn-info btn-lg"  onClick={() => this.btnRecordClick()}> Record</button>
+      buttons = <div>
+        <button type="button" className="btn btn-success"  onClick={() => this.btnRecordClick()}> Record</button>
+        <button type="button" className="btn btn-danger" onClick={() => this.btnSkipClick()}> Skip</button>
+      </div>
     }
 
+    const { blobURL } = this.state;
+
+  if(this.totalquestions){
     return (
       <div className="container">
 
         {/* Question */}
-        <div className="question alert alert-secondary">
+        <div className="question alert alert-secondary">{this.totalquestions}.
           {this.state.questions.length ? this.state.questions[this.state.activeQuestion].content : ''}
         </div>
 
@@ -116,18 +134,33 @@ export default class Audiorecord extends Component {
           <ReactMic
               record={this.state.record}         // defaults -> false.  Set to true to begin recording
               pause={this.state.pause}          // defaults -> false.  Available in React-Mic-Plus upgrade only
-              // className={string}       // provide css class name
-              // onStop={function}        // callback to execute when audio stops recording
-              // onData={function}        // callback to execute when chunk of audio data is available
-              // strokeColor={string}     // sound wave color
+              // className={sound-wave}       // provide css class name
+              onStop={this.onStopCallback}        // callback to execute when audio stops recording
+              onData={this.onData}        // callback to execute when chunk of audio data is available
+              // strokeColor={#000000}     // sound wave color
               // backgroundColor={string} // background color
             />
         </div>
 
+        <div>
+            <audio ref="audioSource" controls="controls" src={blobURL}></audio>
+        </div>
+
         {/* Buttons */}
         { buttons }
-
       </div>
     );
   }
+  else{
+    return(
+      <div className="container">
+      <h4 className = "thanks">Thank you for practicing with us!!!</h4>
+      <h4>Your interview has been submitted for evaluation. You will receive your results soon!!</h4>
+      <button>
+        <Link className="button-link" to="/sform">Continue practicing?</Link>
+      </button>
+    </div> 
+    );
+  }
+}
 }

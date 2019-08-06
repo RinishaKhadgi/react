@@ -8,6 +8,7 @@ import Sform from './components/Sform'
 import Audiorecord from './components/Audiorecord'
 import Default from './components/Default'
 import Profile from './components/Profile'
+import Expert from './components/Expert'
 // import logo from './logo.svg';
 import './App.css';
 
@@ -23,6 +24,7 @@ function App() {
           <Route exact path="/sform" component={Sform} />
           <Route exact path="/audiorecord" component={Audiorecord} />
           <Route exact path="/profile" component={Profile} />
+          <Route exact path="/expert" component={Expert} />
           <Route component={Default} />
         </Switch>
       </div>

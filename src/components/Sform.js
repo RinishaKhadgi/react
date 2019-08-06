@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
-// import '../../node_modules/react-select/dist/react-select.css';
+import '../../node_modules/react-select/dist/react-select.css';
 
 class Sform extends Component {
   constructor() {

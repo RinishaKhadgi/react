@@ -27,6 +27,7 @@ export const login = user => {
     })
 }
 
+
 export const getProfile = user => {
   return axios
     .get('users/profile', {
